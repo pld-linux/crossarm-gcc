@@ -5,14 +5,14 @@ Summary(pl):	Skro¶ne narzêdzia programistyczne GNU dla ARM - gcc
 Summary(pt_BR):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr):	GNU geliþtirme araçlarý - ARM gcc
 Name:		crossarm-gcc
-%define		_snap	20040820
+%define		_snap	20040827
 Version:	3.4.2
 Release:	0.%{_snap}.1
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/3.4-%{_snap}/gcc-3.4-%{_snap}.tar.bz2
-# Source0-md5:	1ac3d6a9b67ee2e55a5448dc7a1996cc
+# Source0-md5:	a1b3041177090adab4098e3ad4099dd8
 BuildRequires:	crossarm-binutils
 BuildRequires:	flex
 BuildRequires:	bison
