@@ -10,12 +10,17 @@ Summary(pt_BR):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr):	GNU geliþtirme araçlarý - ARM gcc
 Name:		crossarm-gcc
 Version:	3.4.3
-Release:	1
+Release:	1.1
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
 # Source0-md5:	e744b30c834360fccac41eb7269a3011
+%define		_llh_ver	2.6.9.1
+Source1:	linux-libc-headers-%{_llh_ver}.tar.bz2
+# Source1-md5:	0
+Source2:	glibc-20041030.tar.bz2
+# Source2-md5:	4e14871efd881fbbf523a0ba16175bc7
 Patch0:		%{name}-pr15068.patch
 BuildRequires:	crossarm-binutils
 BuildRequires:	flex
@@ -49,10 +54,33 @@ maszynach binariów do uruchamiania na ARM (architektura
 arm-linux).
 
 %prep
-%setup -q -n gcc-%{version}
+%setup -q -n gcc-%{version} -a1 -a2
 %patch0 -p1
 
 %build
+FAKE_ROOT=$PWD/fake-root
+%if 0
+# install arm linux headers
+rm -rf fake-root && mkdir -p fake-root/usr/include
+cp -r linux-libc-headers-%{_llh_ver}/include/{asm-arm,linux} $FAKE_ROOT/usr/include
+ln -s asm-arm $FAKE_ROOT/usr/include/asm
+# build glibc headers
+cd libc
+rm -rf builddir && mkdir builddir && cd builddir
+../configure \
+	--prefix=$FAKE_ROOT/usr \
+	--build=%{_target_platform} \
+	--host=arm-pld-linux \
+	--disable-nls \
+	--with-headers=$FAKE_ROOT/usr/include \
+	--disable-sanity-checks \
+	--enable-hacker-mode
+
+make sysdeps/gnu/errlist.c
+make install-headers
+cd -	
+%endif
+
 rm -rf obj-%{target}
 install -d obj-%{target}
 cd obj-%{target}
@@ -62,6 +90,7 @@ CXXFLAGS="%{rpmcflags}" \
 TEXCONFIG=false \
 ../configure \
 	--prefix=%{_prefix} \
+	--with-sysroot=$FAKE_ROOT \
 	--infodir=%{_infodir} \
 	--mandir=%{_mandir} \
 	--bindir=%{_bindir} \
@@ -69,24 +98,23 @@ TEXCONFIG=false \
 	--libexecdir=%{_libdir} \
 	--disable-shared \
 	--disable-threads \
-	--enable-languages="c" \
+	--enable-languages="c,c++" \
+	--enable-c99 \
 	--with-gnu-as \
 	--with-gnu-ld \
 	--with-system-zlib \
 	--with-multilib \
-	--with-newlib \
-	--without-headers \
 	--without-x \
 	--target=%{target} \
 	--host=%{_target_platform} \
 	--build=%{_target_platform}
 
-%{__make}
+%{__make} all-gcc
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} -C obj-%{target} install \
+%{__make} -C obj-%{target} install-gcc \
 	DESTDIR=$RPM_BUILD_ROOT
 
 # don't want this here
