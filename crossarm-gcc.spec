@@ -159,6 +159,19 @@ install obj-%{target}/gcc/specs $RPM_BUILD_ROOT%{gcclib}
 # don't want this here
 rm -f $RPM_BUILD_ROOT%{_libdir}/libiberty.a
 
+# include/ contains install-tools/include/* and headers that were fixed up
+# by fixincludes, we don't want former
+gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
+mkdir	$gccdir/tmp
+# we have to save these however
+#{?with_java:mv -f $gccdir/include/{gcj,libffi/ffitarget.h} $gccdir/tmp}
+mv -f	$gccdir/include/syslimits.h $gccdir/tmp
+rm -rf	$gccdir/include
+mv -f	$gccdir/tmp $gccdir/include
+cp -f	$gccdir/install-tools/include/*.h $gccdir/include
+# but we don't want anything more from install-tools
+rm -rf	$gccdir/install-tools
+
 %if 0%{!?debug:1}
 %{target}-strip -g $RPM_BUILD_ROOT%{gcclib}/libgcc.a
 %{target}-strip -g $RPM_BUILD_ROOT%{gcclib}/libgcov.a
