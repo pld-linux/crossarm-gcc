@@ -186,10 +186,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/%{target}-gcc
 %dir %{gccarch}
 %dir %{gcclib}
+%dir %{gcclib}/thumb
 %attr(755,root,root) %{gcclib}/cc1
 %attr(755,root,root) %{gcclib}/collect2
 %{gcclib}/crt*.o
 %{gcclib}/libgcc.a
+%{gcclib}/thumb/crt*.o
+%{gcclib}/thumb/libgcc.a
 %{gcclib}/specs*
 %dir %{gcclib}/include
 %{gcclib}/include/*.h
