@@ -3,6 +3,9 @@
 #		- GCC ARM Improvement Project - http://www.inf.u-szeged.hu/gcc-arm/
 #		- Developing StrongARM shellocde - http://phrack.org/show.php?p=58&a=10
 #
+# Conditional build:
+%bcond_with	eabi		# build with Embedded ABI support
+#
 Summary:	Cross ARM GNU binary utility development utilities - gcc
 Summary(es):	Utilitarios para desarrollo de binarios de la GNU - ARM gcc
 Summary(fr):	Utilitaires de développement binaire de GNU - ARM gcc
@@ -12,7 +15,7 @@ Summary(tr):	GNU geliþtirme araçlarý - ARM gcc
 Name:		crossarm-gcc
 Version:	4.0.0
 %define		_snap	20050130
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.1%{?with_eabi:eabi}
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
@@ -22,21 +25,26 @@ Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/gcc-4.0-%{_snap}.tar.b
 %define		_llh_ver	2.6.10.0
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
 # Source1-md5:	a43c53f1bb0b586bc9bd2e8abb19e2bc
-Source2:	ftp://sources.redhat.com/pub/glibc/releases/glibc-2.3.4.tar.bz2
+%define		_glibc_ver	2.3.4
+Source2:	ftp://sources.redhat.com/pub/glibc/releases/glibc-%{_glibc_ver}.tar.bz2
 # Source2-md5:	174ac5ed4f2851fcc866a3bac1e4a6a5
+%define		_uclibc_ver	0.9.27
+Source3:	http://uclibc.org/downloads/uClibc-%{_uclibc_ver}.tar.bz2
+# Source3-md5:	6250bd6524283bd8e7bc976d43a46ec0
+Source4:	crossarm-embedded-uclibc.config
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	bison
-BuildRequires:	crossarm-binutils
+BuildRequires:	crossarm-binutils%{?with_eabi:(eabi)}
 BuildRequires:	flex
 BuildRequires:	/bin/bash
-Requires:	crossarm-binutils
+Requires:	crossarm-binutils%{?with_eabi:(eabi)}
 Requires:	gcc-dirs
 ExcludeArch:	arm
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		target		arm-pld-linux
+%define		target		arm-linux%{?with_eabi:-eabi}
 %define		arch		%{_prefix}/%{target}
 %define		gccarch		%{_libdir}/gcc/%{target}
 %define		gcclib		%{gccarch}/%{version}
@@ -70,16 +78,24 @@ This package adds C++ support to the GNU Compiler Collection for ARM.
 Ten pakiet dodaje obs³ugê C++ do kompilatora gcc dla ARM.
 
 %prep
-%setup -q -n gcc-4.0-%{_snap} -a1 -a2
+%setup -q -n gcc-4.0-%{_snap} -a1 -a2 -a3
 
 %build
 FAKE_ROOT=$PWD/fake-root
+rm -rf $FAKE_ROOT
 
-rm -rf $FAKE_ROOT && install -d $FAKE_ROOT/usr/include
-cp -r linux-libc-headers-%{_llh_ver}/include/{asm-arm,linux} $FAKE_ROOT/usr/include
-ln -s asm-arm $FAKE_ROOT/usr/include/asm
+%if %{with eabi}
+install -d $FAKE_ROOT%{_prefix}
+cp -r uClibc-%{_uclibc_ver}/* $FAKE_ROOT%{_prefix}
+cd $FAKE_ROOT%{_prefix}
+install %{SOURCE4} .config
+%{__make} headers
+%else
+install -d $FAKE_ROOT%{_includedir}
+cp -r linux-libc-headers-%{_llh_ver}/include/{asm-arm,linux} $FAKE_ROOT%{_includedir}
+ln -s asm-arm $FAKE_ROOT%{_includedir}/asm
 
-cd glibc-2.3.4
+cd glibc-%{_glibc_ver}
 cp -f /usr/share/automake/config.* scripts
 rm -rf builddir && install -d builddir && cd builddir
 ../configure \
@@ -96,7 +112,8 @@ rm -rf builddir && install -d builddir && cd builddir
 
 install bits/stdio_lim.h $FAKE_ROOT/usr/include/bits
 touch $FAKE_ROOT/usr/include/gnu/stubs.h
-cd ../..
+%endif
+cd -
 
 cp -f /usr/share/automake/config.* .
 rm -rf obj-%{target}
