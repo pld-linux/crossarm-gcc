@@ -12,7 +12,7 @@ Name:		crossarm-gcc
 #define		_snap	20040827
 Version:	3.4.2
 #Release:	0.%{_snap}.1
-Release:	2
+Release:	3
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
@@ -26,6 +26,7 @@ BuildRequires:	bison
 BuildRequires:	autoconf
 BuildRequires:	/bin/bash
 Requires:	crossarm-binutils
+Requires:	gcc-dirs
 ExcludeArch:	arm
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
