@@ -17,8 +17,8 @@ Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
 # Source0-md5:	e744b30c834360fccac41eb7269a3011
 %define		_llh_ver	2.6.9.1
-Source1:	linux-libc-headers-%{_llh_ver}.tar.bz2
-# Source1-md5:	0
+Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
+# Source1-md5:	d3507b2c0203a0760a677022badcf455
 Source2:	glibc-20041030.tar.bz2
 # Source2-md5:	4e14871efd881fbbf523a0ba16175bc7
 Patch0:		%{name}-pr15068.patch
@@ -53,33 +53,46 @@ Ten pakiet zawiera skro¶ny gcc pozwalaj±cy na robienie na innych
 maszynach binariów do uruchamiania na ARM (architektura
 arm-linux).
 
+%package c++
+Summary:	C++ support for crossppc-arm
+Summary(pl):	Obs³uga C++ dla crossppc-arm
+Group:		Development/Languages
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description c++
+This package adds C++ support to the GNU Compiler Collection for ARM.
+
+%description c++ -l pl
+Ten pakiet dodaje obs³ugê C++ do kompilatora gcc dla ARM.
+
 %prep
 %setup -q -n gcc-%{version} -a1 -a2
 %patch0 -p1
 
 %build
 FAKE_ROOT=$PWD/fake-root
-%if 0
-# install arm linux headers
-rm -rf fake-root && mkdir -p fake-root/usr/include
+
+rm -rf $FAKE_ROOT && install -d $FAKE_ROOT/usr/include
 cp -r linux-libc-headers-%{_llh_ver}/include/{asm-arm,linux} $FAKE_ROOT/usr/include
 ln -s asm-arm $FAKE_ROOT/usr/include/asm
-# build glibc headers
+
 cd libc
-rm -rf builddir && mkdir builddir && cd builddir
+rm -rf builddir && install -d builddir && cd builddir
 ../configure \
 	--prefix=$FAKE_ROOT/usr \
 	--build=%{_target_platform} \
-	--host=arm-pld-linux \
+	--host=%{target} \
 	--disable-nls \
 	--with-headers=$FAKE_ROOT/usr/include \
 	--disable-sanity-checks \
 	--enable-hacker-mode
 
-make sysdeps/gnu/errlist.c
-make install-headers
-cd -	
-%endif
+%{__make} sysdeps/gnu/errlist.c
+%{__make} install-headers
+
+install bits/stdio_lim.h $FAKE_ROOT/usr/include/bits
+touch $FAKE_ROOT/usr/include/gnu/stubs.h
+cd ../..
 
 rm -rf obj-%{target}
 install -d obj-%{target}
@@ -104,6 +117,7 @@ TEXCONFIG=false \
 	--with-gnu-ld \
 	--with-system-zlib \
 	--with-multilib \
+	--with-sysroot=$FAKE_ROOT \
 	--without-x \
 	--target=%{target} \
 	--host=%{_target_platform} \
@@ -120,9 +134,9 @@ rm -rf $RPM_BUILD_ROOT
 # don't want this here
 rm -f $RPM_BUILD_ROOT%{_libdir}/libiberty.a
 
-%{target}-strip -g $RPM_BUILD_ROOT%{gcclib}/libgcov.a
 %if 0%{!?debug:1}
 %{target}-strip -g $RPM_BUILD_ROOT%{gcclib}/libgcc.a
+%{target}-strip -g $RPM_BUILD_ROOT%{gcclib}/libgcov.a
 %endif
 
 %clean
@@ -131,8 +145,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/%{target}-cpp
-%attr(755,root,root) %{_bindir}/%{target}-gcc*
-%attr(755,root,root) %{_bindir}/%{target}-gcov
+%attr(755,root,root) %{_bindir}/%{target}-gcc
 %dir %{gccarch}
 %dir %{gcclib}
 %attr(755,root,root) %{gcclib}/cc1
@@ -142,4 +155,11 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclib}/specs*
 %dir %{gcclib}/include
 %{gcclib}/include/*.h
+%{_mandir}/man1/%{target}-cpp.1*
 %{_mandir}/man1/%{target}-gcc.1*
+
+%files c++
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/%{target}-g++
+%attr(755,root,root) %{gcclib}/cc1plus
+%{_mandir}/man1/%{target}-g++.1*
