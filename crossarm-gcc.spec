@@ -20,11 +20,11 @@ License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
 # Source0-md5:	e744b30c834360fccac41eb7269a3011
-%define		_llh_ver	2.6.9.1
+%define		_llh_ver	2.6.10.0
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
 # Source1-md5:	d3507b2c0203a0760a677022badcf455
-Source2:	glibc-20041030.tar.bz2
-# Source2-md5:	4e14871efd881fbbf523a0ba16175bc7
+Source2:        ftp://sources.redhat.com/pub/glibc/releases/glibc-2.3.4.tar.bz2
+# Source2-md5:  174ac5ed4f2851fcc866a3bac1e4a6a5
 Patch0:		%{name}-pr15068.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
