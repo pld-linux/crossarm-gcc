@@ -3,9 +3,6 @@
 #		- GCC ARM Improvement Project - http://www.inf.u-szeged.hu/gcc-arm/
 #		- Developing StrongARM shellocde - http://phrack.org/show.php?p=58&a=10
 #
-# TODO:
-#		- http://gcc.gnu.org/PR18560
-#
 Summary:	Cross ARM GNU binary utility development utilities - gcc
 Summary(es):	Utilitarios para desarrollo de binarios de la GNU - ARM gcc
 Summary(fr):	Utilitaires de développement binaire de GNU - ARM gcc
@@ -13,19 +10,20 @@ Summary(pl):	Skro¶ne narzêdzia programistyczne GNU dla ARM - gcc
 Summary(pt_BR):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr):	GNU geliþtirme araçlarý - ARM gcc
 Name:		crossarm-gcc
-Version:	3.4.3
-Release:	2
+Version:	4.0.0
+%define		_snap	20050130
+Release:	0.%{_snap}.1
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
-# Source0-md5:	e744b30c834360fccac41eb7269a3011
+#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/gcc-4.0-%{_snap}.tar.bz2
+# Source0-md5:	5040ba840d0367c378f73c739418b3e2
 %define		_llh_ver	2.6.10.0
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
-# Source1-md5:	d3507b2c0203a0760a677022badcf455
+# Source1-md5:	a43c53f1bb0b586bc9bd2e8abb19e2bc
 Source2:	ftp://sources.redhat.com/pub/glibc/releases/glibc-2.3.4.tar.bz2
 # Source2-md5:	174ac5ed4f2851fcc866a3bac1e4a6a5
-Patch0:		%{name}-pr15068.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -72,8 +70,7 @@ This package adds C++ support to the GNU Compiler Collection for ARM.
 Ten pakiet dodaje obs³ugê C++ do kompilatora gcc dla ARM.
 
 %prep
-%setup -q -n gcc-%{version} -a1 -a2
-%patch0 -p1
+%setup -q -n gcc-4.0-%{_snap} -a1 -a2
 
 %build
 FAKE_ROOT=$PWD/fake-root
@@ -139,6 +136,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} -C obj-%{target} install-gcc \
 	DESTDIR=$RPM_BUILD_ROOT
+
+install obj-%{target}/gcc/specs $RPM_BUILD_ROOT%{gcclib}
 
 # don't want this here
 rm -f $RPM_BUILD_ROOT%{_libdir}/libiberty.a
