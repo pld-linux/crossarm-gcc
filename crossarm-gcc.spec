@@ -22,7 +22,7 @@ Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz
 # Source0-md5:	e744b30c834360fccac41eb7269a3011
 %define		_llh_ver	2.6.10.0
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
-# Source1-md5:	d3507b2c0203a0760a677022badcf455
+# Source1-md5:	a43c53f1bb0b586bc9bd2e8abb19e2bc
 Source2:	ftp://sources.redhat.com/pub/glibc/releases/glibc-2.3.4.tar.bz2
 # Source2-md5:	174ac5ed4f2851fcc866a3bac1e4a6a5
 Patch0:		%{name}-pr15068.patch
