@@ -23,8 +23,8 @@ Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz
 %define		_llh_ver	2.6.10.0
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
 # Source1-md5:	d3507b2c0203a0760a677022badcf455
-Source2:        ftp://sources.redhat.com/pub/glibc/releases/glibc-2.3.4.tar.bz2
-# Source2-md5:  174ac5ed4f2851fcc866a3bac1e4a6a5
+Source2:	ftp://sources.redhat.com/pub/glibc/releases/glibc-2.3.4.tar.bz2
+# Source2-md5:	174ac5ed4f2851fcc866a3bac1e4a6a5
 Patch0:		%{name}-pr15068.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
@@ -82,7 +82,7 @@ rm -rf $FAKE_ROOT && install -d $FAKE_ROOT/usr/include
 cp -r linux-libc-headers-%{_llh_ver}/include/{asm-arm,linux} $FAKE_ROOT/usr/include
 ln -s asm-arm $FAKE_ROOT/usr/include/asm
 
-cd libc
+cd glibc-2.3.4
 cp -f /usr/share/automake/config.* scripts
 rm -rf builddir && install -d builddir && cd builddir
 ../configure \
