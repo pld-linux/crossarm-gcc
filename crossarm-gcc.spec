@@ -113,6 +113,7 @@ TEXCONFIG=false \
 	--disable-threads \
 	--enable-languages="c,c++" \
 	--enable-c99 \
+	--enable-long-long \
 	--with-gnu-as \
 	--with-gnu-ld \
 	--with-system-zlib \
