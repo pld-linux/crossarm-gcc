@@ -2,6 +2,9 @@
 # MUST SEE:
 #		GCC ARM Improvement Project - http://www.inf.u-szeged.hu/gcc-arm/
 #
+# TODO:
+#		- http://gcc.gnu.org/PR18560
+#
 Summary:	Cross ARM GNU binary utility development utilities - gcc
 Summary(es):	Utilitarios para desarrollo de binarios de la GNU - ARM gcc
 Summary(fr):	Utilitaires de développement binaire de GNU - ARM gcc
