@@ -14,14 +14,14 @@ Summary(pt_BR):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr):	GNU geliþtirme araçlarý - ARM gcc
 Name:		crossarm-gcc
 Version:	4.0.0
-%define		_snap	20050312
+%define		_snap	20050319
 Release:	0.%{_snap}.1%{?with_eabi:eabi}
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/gcc-4.0-%{_snap}.tar.bz2
-# Source0-md5:	38b8f2d145741881898c26a64ee9fc2e
+# Source0-md5:	981afe4856b3c23db52c515aecc9ead8
 %define		_llh_ver	2.6.11.0
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
 # Source1-md5:	7dc73cdc8198f6f8ba25515aea799bbd
