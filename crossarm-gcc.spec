@@ -12,13 +12,14 @@ Name:		crossarm-gcc
 #define		_snap	20040827
 Version:	3.4.2
 #Release:	0.%{_snap}.1
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/3.4-%{_snap}/gcc-3.4-%{_snap}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
 # Source0-md5:	2fada3a3effd2fd791df09df1f1534b3
+Patch0:		%{name}-pr15068.patch
 BuildRequires:	crossarm-binutils
 BuildRequires:	flex
 BuildRequires:	bison
@@ -52,6 +53,7 @@ arm-linux).
 %prep
 #setup -q -n gcc-3.4-%{_snap}
 %setup -q -n gcc-%{version}
+%patch0 -p1
 
 %build
 rm -rf obj-%{target}
