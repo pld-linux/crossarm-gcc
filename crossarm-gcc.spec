@@ -1,6 +1,7 @@
 #
 # MUST SEE:
-#		GCC ARM Improvement Project - http://www.inf.u-szeged.hu/gcc-arm/
+#		- GCC ARM Improvement Project - http://www.inf.u-szeged.hu/gcc-arm/
+#		- Developing StrongARM shellocde - http://phrack.org/show.php?p=58&a=10
 #
 # TODO:
 #		- http://gcc.gnu.org/PR18560
