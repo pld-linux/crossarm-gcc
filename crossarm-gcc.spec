@@ -42,7 +42,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		gccarch		%{_libdir}/gcc/%{target}
 %define		gcclib		%{gccarch}/%{version}
 
-%define		_noautostrip	.*%{gcclib}.*/libgc.*\\.a
+%define		_noautostrip	.*/libgc.*\\.a
 
 %description
 This package contains a cross-gcc which allows the creation of
