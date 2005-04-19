@@ -14,14 +14,15 @@ Summary(pt_BR):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr):	GNU geliþtirme araçlarý - ARM gcc
 Name:		crossarm-gcc
 Version:	4.0.0
-%define		_snap	20050416
+%define		_snap	20050417
 Release:	0.%{_snap}.1%{?with_eabi:eabi}
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/gcc-4.0-%{_snap}.tar.bz2
-# Source0-md5:	ac878a0dcb0a20eab5c1baafda657436
+#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/gcc-4.0-%{_snap}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
+# Source0-md5:	99f114330f152939f0d9586010da176f
 %define		_llh_ver	2.6.11.2
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
 # Source1-md5:	2d21d8e7ff641da74272b114c786464e
@@ -29,13 +30,14 @@ Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers
 Source2:	http://uclibc.org/downloads/uClibc-%{_uclibc_ver}.tar.bz2
 # Source2-md5:	6250bd6524283bd8e7bc976d43a46ec0
 Source3:	crossarm-embedded-uclibc.config
+Patch0:		gcc-pr20973.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	bison
 BuildRequires:	crossarm-binutils%{?with_eabi:(eabi)}
 BuildRequires:	flex
-BuildRequires:	/bin/bash
+BuildRequires:	kernel-module-build
 Requires:	crossarm-binutils%{?with_eabi:(eabi)}
 Requires:	gcc-dirs
 ExcludeArch:	arm
@@ -75,7 +77,9 @@ This package adds C++ support to the GNU Compiler Collection for ARM.
 Ten pakiet dodaje obs³ugê C++ do kompilatora gcc dla ARM.
 
 %prep
-%setup -q -n gcc-4.0-%{_snap} -a1 -a2
+#setup -q -n gcc-4.0-%{_snap} -a1 -a2
+%setup -q -n gcc-%{version}-%{_snap} -a1 -a2
+%patch0 -p1
 
 %build
 FAKE_ROOT=$PWD/fake-root
@@ -94,7 +98,7 @@ install -d obj-%{target}
 cd obj-%{target}
 
 CFLAGS="%{rpmcflags}" \
-CXXFLAGS="%{rpmcflags}" \
+CXXFLAGS="%{rpmcxxflags}" \
 TEXCONFIG=false \
 ../configure \
 	--prefix=%{_prefix} \
