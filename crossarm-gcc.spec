@@ -3,8 +3,8 @@
 #		- GCC ARM Improvement Project - http://www.inf.u-szeged.hu/gcc-arm/
 #		- Developing StrongARM shellocde - http://phrack.org/show.php?p=58&a=10
 #
-# TODO:
-#		- http://gcc.gnu.org/PR18560
+# Conditional build:
+%bcond_with	eabi		# build with Embedded ABI support
 #
 Summary:	Cross ARM GNU binary utility development utilities - gcc
 Summary(es):	Utilitarios para desarrollo de binarios de la GNU - ARM gcc
@@ -13,32 +13,35 @@ Summary(pl):	Skro¶ne narzêdzia programistyczne GNU dla ARM - gcc
 Summary(pt_BR):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr):	GNU geliþtirme araçlarý - ARM gcc
 Name:		crossarm-gcc
-Version:	3.4.3
-Release:	2
+Version:	4.0.0
+Release:	1%{?with_eabi:eabi}
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
-# Source0-md5:	e744b30c834360fccac41eb7269a3011
-%define		_llh_ver	2.6.10.0
+# Source0-md5:	99f114330f152939f0d9586010da176f
+%define		_llh_ver	2.6.11.2
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
-# Source1-md5:	a43c53f1bb0b586bc9bd2e8abb19e2bc
-Source2:	ftp://sources.redhat.com/pub/glibc/releases/glibc-2.3.4.tar.bz2
-# Source2-md5:	174ac5ed4f2851fcc866a3bac1e4a6a5
-Patch0:		%{name}-pr15068.patch
+# Source1-md5:	2d21d8e7ff641da74272b114c786464e
+%define		_uclibc_ver	0.9.27
+Source2:	http://uclibc.org/downloads/uClibc-%{_uclibc_ver}.tar.bz2
+# Source2-md5:	6250bd6524283bd8e7bc976d43a46ec0
+Source3:	crossarm-embedded-uclibc.config
+Patch0:		gcc-pr20973.patch
+Patch1:		gcc-pr21173.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	bison
-BuildRequires:	crossarm-binutils
+BuildRequires:	crossarm-binutils%{?with_eabi:(eabi)}
 BuildRequires:	flex
-BuildRequires:	/bin/bash
-Requires:	crossarm-binutils
+BuildRequires:	kernel-module-build
+Requires:	crossarm-binutils%{?with_eabi:(eabi)}
 Requires:	gcc-dirs
 ExcludeArch:	arm
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		target		arm-pld-linux
+%define		target		arm-linux%{?with_eabi:-eabi}
 %define		arch		%{_prefix}/%{target}
 %define		gccarch		%{_libdir}/gcc/%{target}
 %define		gcclib		%{gccarch}/%{version}
@@ -74,32 +77,18 @@ Ten pakiet dodaje obs³ugê C++ do kompilatora gcc dla ARM.
 %prep
 %setup -q -n gcc-%{version} -a1 -a2
 %patch0 -p1
+%patch1 -p1
 
 %build
 FAKE_ROOT=$PWD/fake-root
+rm -rf $FAKE_ROOT
 
-rm -rf $FAKE_ROOT && install -d $FAKE_ROOT/usr/include
-cp -r linux-libc-headers-%{_llh_ver}/include/{asm-arm,linux} $FAKE_ROOT/usr/include
-ln -s asm-arm $FAKE_ROOT/usr/include/asm
-
-cd glibc-2.3.4
-cp -f /usr/share/automake/config.* scripts
-rm -rf builddir && install -d builddir && cd builddir
-../configure \
-	--prefix=$FAKE_ROOT/usr \
-	--build=%{_target_platform} \
-	--host=%{target} \
-	--disable-nls \
-	--with-headers=$FAKE_ROOT/usr/include \
-	--disable-sanity-checks \
-	--enable-hacker-mode
-
-%{__make} sysdeps/gnu/errlist.c
-%{__make} install-headers
-
-install bits/stdio_lim.h $FAKE_ROOT/usr/include/bits
-touch $FAKE_ROOT/usr/include/gnu/stubs.h
-cd ../..
+install -d $FAKE_ROOT%{_prefix}
+cp -r uClibc-%{_uclibc_ver}/* $FAKE_ROOT%{_prefix}
+cd $FAKE_ROOT%{_prefix}
+install %{SOURCE3} .config
+%{__make} headers
+cd -
 
 cp -f /usr/share/automake/config.* .
 rm -rf obj-%{target}
@@ -107,11 +96,10 @@ install -d obj-%{target}
 cd obj-%{target}
 
 CFLAGS="%{rpmcflags}" \
-CXXFLAGS="%{rpmcflags}" \
+CXXFLAGS="%{rpmcxxflags}" \
 TEXCONFIG=false \
 ../configure \
 	--prefix=%{_prefix} \
-	--with-sysroot=$FAKE_ROOT \
 	--infodir=%{_infodir} \
 	--mandir=%{_mandir} \
 	--bindir=%{_bindir} \
@@ -122,10 +110,12 @@ TEXCONFIG=false \
 	--enable-languages="c,c++" \
 	--enable-c99 \
 	--enable-long-long \
+	--disable-nls \
 	--with-gnu-as \
 	--with-gnu-ld \
+	--with-demangler-in-ld \
 	--with-system-zlib \
-	--with-multilib \
+	--disable-multilib \
 	--with-sysroot=$FAKE_ROOT \
 	--without-x \
 	--target=%{target} \
@@ -140,8 +130,23 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} -C obj-%{target} install-gcc \
 	DESTDIR=$RPM_BUILD_ROOT
 
+install obj-%{target}/gcc/specs $RPM_BUILD_ROOT%{gcclib}
+
 # don't want this here
 rm -f $RPM_BUILD_ROOT%{_libdir}/libiberty.a
+
+# include/ contains install-tools/include/* and headers that were fixed up
+# by fixincludes, we don't want former
+gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
+mkdir	$gccdir/tmp
+# we have to save these however
+#{?with_java:mv -f $gccdir/include/{gcj,libffi/ffitarget.h} $gccdir/tmp}
+mv -f	$gccdir/include/syslimits.h $gccdir/tmp
+rm -rf	$gccdir/include
+mv -f	$gccdir/tmp $gccdir/include
+cp -f	$gccdir/install-tools/include/*.h $gccdir/include
+# but we don't want anything more from install-tools
+rm -rf	$gccdir/install-tools
 
 %if 0%{!?debug:1}
 %{target}-strip -g $RPM_BUILD_ROOT%{gcclib}/libgcc.a
@@ -157,10 +162,15 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/%{target}-gcc
 %dir %{gccarch}
 %dir %{gcclib}
+%{?with_eabi:%dir %{gcclib}/thumb}
 %attr(755,root,root) %{gcclib}/cc1
 %attr(755,root,root) %{gcclib}/collect2
 %{gcclib}/crt*.o
 %{gcclib}/libgcc.a
+%if %{with eabi}
+%{gcclib}/thumb/crt*.o
+%{gcclib}/thumb/libgcc.a
+%endif
 %{gcclib}/specs*
 %dir %{gcclib}/include
 %{gcclib}/include/*.h
