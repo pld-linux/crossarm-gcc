@@ -115,7 +115,7 @@ TEXCONFIG=false \
 	--with-gnu-ld \
 	--with-demangler-in-ld \
 	--with-system-zlib \
-	--disable-multilib \
+	--enable-multilib \
 	--with-sysroot=$FAKE_ROOT \
 	--without-x \
 	--target=%{target} \
