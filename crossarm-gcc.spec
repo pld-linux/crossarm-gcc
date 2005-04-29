@@ -63,8 +63,8 @@ maszynach binariów do uruchamiania na ARM (architektura
 arm-linux).
 
 %package c++
-Summary:	C++ support for crossppc-arm
-Summary(pl):	Obs³uga C++ dla crossppc-arm
+Summary:	C++ support for crossarm-gcc
+Summary(pl):	Obs³uga C++ dla crossarm-gcc
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
