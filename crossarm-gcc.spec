@@ -12,14 +12,15 @@ Summary(fr):	Utilitaires de développement binaire de GNU - ARM gcc
 Summary(pl):	Skro¶ne narzêdzia programistyczne GNU dla ARM - gcc
 Summary(pt_BR):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr):	GNU geliþtirme araçlarý - ARM gcc
-Name:		crossarm-gcc
-Version:	4.0.0
-Release:	2%{?with_eabi:eabi}
+Version:	4.0.1
+%define		_snap	20050507
+Release:	0.%{_snap}.1
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
-# Source0-md5:	55ee7df1b29f719138ec063c57b89db6
+#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/gcc-4.0-%{_snap}.tar.bz2
+# Source0-md5:	701f385de867d117f3648165174b254a
 %define		_llh_ver	2.6.11.2
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
 # Source1-md5:	2d21d8e7ff641da74272b114c786464e
@@ -75,9 +76,8 @@ This package adds C++ support to the GNU Compiler Collection for ARM.
 Ten pakiet dodaje obs³ugê C++ do kompilatora gcc dla ARM.
 
 %prep
-%setup -q -n gcc-%{version} -a1 -a2
-%patch0 -p1
-%patch1 -p1
+#setup -q -n gcc-%{version} -a1 -a2
+%setup -q -n gcc-4.0-%{_snap} -a1 -a2
 
 %build
 FAKE_ROOT=$PWD/fake-root
