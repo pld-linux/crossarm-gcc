@@ -28,8 +28,6 @@ Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers
 Source2:	http://uclibc.org/downloads/uClibc-%{_uclibc_ver}.tar.bz2
 # Source2-md5:	6250bd6524283bd8e7bc976d43a46ec0
 Source3:	crossarm-embedded-uclibc.config
-Patch0:		gcc-pr20973.patch
-Patch1:		gcc-pr21173.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
