@@ -51,17 +51,15 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 This package contains a cross-gcc which allows the creation of
-binaries to be run on ARM linux (architecture arm-linux) on
-other machines.
+binaries to be run on ARM Linux on other machines.
 
 %description -l de
 Dieses Paket enthält einen Cross-gcc, der es erlaubt, auf einem
-anderem Rechner Code für arm-Linux zu generieren.
+anderem Rechner Code für ARM Linux zu generieren.
 
 %description -l pl
 Ten pakiet zawiera skro¶ny gcc pozwalaj±cy na robienie na innych
-maszynach binariów do uruchamiania na ARM (architektura
-arm-linux).
+maszynach binariów do uruchamiania na Linuksie ARM.
 
 %package c++
 Summary:	C++ support for crossarm-gcc
