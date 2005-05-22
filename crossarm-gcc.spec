@@ -14,14 +14,14 @@ Summary(pt_BR):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr):	GNU geliþtirme araçlarý - ARM gcc
 Name:		crossarm-gcc
 Version:	4.0.1
-%define		_snap	20050514
+%define		_snap	20050521
 Release:	0.%{_snap}.1
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/gcc-4.0-%{_snap}.tar.bz2
-# Source0-md5:	25e147473b14c4bb43cdc53299c3524c
+# Source0-md5:	7f45e29a00590ce57a001a9294e8184e
 %define		_llh_ver	2.6.11.2
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
 # Source1-md5:	2d21d8e7ff641da74272b114c786464e
@@ -29,7 +29,6 @@ Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers
 Source2:	http://uclibc.org/downloads/uClibc-%{_uclibc_ver}.tar.bz2
 # Source2-md5:	6250bd6524283bd8e7bc976d43a46ec0
 Source3:	crossarm-embedded-uclibc.config
-Patch0:		gcc-pr21454.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -76,7 +75,6 @@ Ten pakiet dodaje obs³ugê C++ do kompilatora gcc dla ARM.
 %prep
 #setup -q -n gcc-%{version} -a1 -a2
 %setup -q -n gcc-4.0-%{_snap} -a1 -a2
-%patch0 -p1
 
 %build
 FAKE_ROOT=$PWD/fake-root
