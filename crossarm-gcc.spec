@@ -4,7 +4,7 @@
 #		- Developing StrongARM shellocde - http://phrack.org/show.php?p=58&a=10
 #
 # Conditional build:
-%bcond_with	eabi		# build with Embedded ABI support
+%bcond_without	eabi		# build without Embedded ABI support
 #
 Summary:	Cross ARM GNU binary utility development utilities - gcc
 Summary(es):	Utilitarios para desarrollo de binarios de la GNU - ARM gcc
@@ -14,14 +14,14 @@ Summary(pt_BR):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr):	GNU geliþtirme araçlarý - ARM gcc
 Name:		crossarm-gcc
 Version:	4.0.1
-%define		_snap	20050609
-Release:	0.%{_snap}.1
+#define		_snap	20050609
+Release:	1
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
-#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/gcc-4.0-%{_snap}.tar.bz2
-# Source0-md5:	3ba660302e1c4c09c878dcab822c9e3c
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
+# Source0-md5:	947416e825a877a0d69489be1be43be1
+#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/gcc-4.0-%{_snap}.tar.bz2
 %define		_llh_ver	2.6.11.2
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
 # Source1-md5:	2d21d8e7ff641da74272b114c786464e
@@ -29,6 +29,7 @@ Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers
 Source2:	http://uclibc.org/downloads/uClibc-%{_uclibc_ver}.tar.bz2
 # Source2-md5:	6250bd6524283bd8e7bc976d43a46ec0
 Source3:	crossarm-embedded-uclibc.config
+Source4:	crossarm-lpc210x-crt0.s
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -73,8 +74,8 @@ This package adds C++ support to the GNU Compiler Collection for ARM.
 Ten pakiet dodaje obs³ugê C++ do kompilatora gcc dla ARM.
 
 %prep
-#setup -q -n gcc-%{version} -a1 -a2
-%setup -q -n gcc-4.0-%{_snap} -a1 -a2
+%setup -q -n gcc-%{version} -a1 -a2
+#setup -q -n gcc-4.0-%{_snap} -a1 -a2
 
 %build
 FAKE_ROOT=$PWD/fake-root
@@ -123,6 +124,7 @@ TEXCONFIG=false \
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT%{_usrsrc}/%{name}
 
 %{__make} -C obj-%{target} install-gcc \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -150,6 +152,10 @@ rm -rf	$gccdir/install-tools
 %{target}-strip -g -R.note -R.comment $RPM_BUILD_ROOT%{gcclib}/libgcov.a
 %endif
 
+# custom startup file(s)
+install %{SOURCE4} $RPM_BUILD_ROOT%{_usrsrc}/%{name}
+%{target}-as -mcpu=arm7tdmi %{SOURCE4} -o $RPM_BUILD_ROOT%{gcclib}/lpc210x-crt0.o
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -162,17 +168,17 @@ rm -rf $RPM_BUILD_ROOT
 %{?with_eabi:%dir %{gcclib}/thumb}
 %attr(755,root,root) %{gcclib}/cc1
 %attr(755,root,root) %{gcclib}/collect2
-%{gcclib}/crt*.o
+%{gcclib}/*crt*.o
 %{gcclib}/libgcc.a
 %if %{with eabi}
 %{gcclib}/thumb/crt*.o
-%{gcclib}/thumb/libgcc.a
 %endif
 %{gcclib}/specs*
 %dir %{gcclib}/include
 %{gcclib}/include/*.h
 %{_mandir}/man1/%{target}-cpp.1*
 %{_mandir}/man1/%{target}-gcc.1*
+%{_usrsrc}/%{name}
 
 %files c++
 %defattr(644,root,root,755)
