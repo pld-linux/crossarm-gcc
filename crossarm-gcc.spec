@@ -172,6 +172,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclib}/libgcc.a
 %if %{with eabi}
 %{gcclib}/thumb/crt*.o
+%{gcclib}/thumb/libgcc.a
 %endif
 %{gcclib}/specs*
 %dir %{gcclib}/include
