@@ -15,7 +15,7 @@ Summary(tr):	GNU geliþtirme araçlarý - ARM gcc
 Name:		crossarm-gcc
 Version:	4.0.1
 #define		_snap	20050609
-Release:	1
+Release:	2%{?with_eabi:eabi}
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
