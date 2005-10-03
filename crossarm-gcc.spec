@@ -13,18 +13,16 @@ Summary(pl):	Skro¶ne narzêdzia programistyczne GNU dla ARM - gcc
 Summary(pt_BR):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr):	GNU geliþtirme araçlarý - ARM gcc
 Name:		crossarm-gcc
-Version:	4.0.1
-#define		_snap	20050609
-Release:	2%{?with_eabi:eabi}
+Version:	4.0.2
+Release:	1%{?with_eabi:eabi}
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
-# Source0-md5:	947416e825a877a0d69489be1be43be1
-#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/gcc-4.0-%{_snap}.tar.bz2
-%define		_llh_ver	2.6.11.2
+# Source0-md5:	a659b8388cac9db2b13e056e574ceeb0
+%define		_llh_ver	2.6.12.0
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
-# Source1-md5:	2d21d8e7ff641da74272b114c786464e
+# Source1-md5:	eae2f562afe224ad50f65a6acfb4252c
 %define		_uclibc_ver	0.9.27
 Source2:	http://uclibc.org/downloads/uClibc-%{_uclibc_ver}.tar.bz2
 # Source2-md5:	6250bd6524283bd8e7bc976d43a46ec0
@@ -75,7 +73,6 @@ Ten pakiet dodaje obs³ugê C++ do kompilatora gcc dla ARM.
 
 %prep
 %setup -q -n gcc-%{version} -a1 -a2
-#setup -q -n gcc-4.0-%{_snap} -a1 -a2
 
 %build
 FAKE_ROOT=$PWD/fake-root
@@ -124,7 +121,7 @@ TEXCONFIG=false \
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_usrsrc}/%{name}
+install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %{__make} -C obj-%{target} install-gcc \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -153,7 +150,7 @@ rm -rf	$gccdir/install-tools
 %endif
 
 # custom startup file(s)
-install %{SOURCE4} $RPM_BUILD_ROOT%{_usrsrc}/%{name}
+install %{SOURCE4} $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 %{target}-as -mcpu=arm7tdmi %{SOURCE4} -o $RPM_BUILD_ROOT%{gcclib}/lpc210x-crt0.o
 
 %clean
@@ -179,7 +176,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclib}/include/*.h
 %{_mandir}/man1/%{target}-cpp.1*
 %{_mandir}/man1/%{target}-gcc.1*
-%{_usrsrc}/%{name}
+%{_examplesdir}/%{name}-%{version}
 
 %files c++
 %defattr(644,root,root,755)
