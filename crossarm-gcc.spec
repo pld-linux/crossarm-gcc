@@ -7,11 +7,11 @@
 %bcond_without	eabi		# build without Embedded ABI support
 #
 Summary:	Cross ARM GNU binary utility development utilities - gcc
-Summary(es.UTF-8):   Utilitarios para desarrollo de binarios de la GNU - ARM gcc
-Summary(fr.UTF-8):   Utilitaires de développement binaire de GNU - ARM gcc
-Summary(pl.UTF-8):   Skrośne narzędzia programistyczne GNU dla ARM - gcc
-Summary(pt_BR.UTF-8):   Utilitários para desenvolvimento de binários da GNU - ARM gcc
-Summary(tr.UTF-8):   GNU geliştirme araçları - ARM gcc
+Summary(es.UTF-8):	Utilitarios para desarrollo de binarios de la GNU - ARM gcc
+Summary(fr.UTF-8):	Utilitaires de développement binaire de GNU - ARM gcc
+Summary(pl.UTF-8):	Skrośne narzędzia programistyczne GNU dla ARM - gcc
+Summary(pt_BR.UTF-8):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
+Summary(tr.UTF-8):	GNU geliştirme araçları - ARM gcc
 Name:		crossarm-gcc
 Version:	4.0.2
 Release:	1%{?with_eabi:eabi}
@@ -61,7 +61,7 @@ maszynach binariów do uruchamiania na Linuksie ARM.
 
 %package c++
 Summary:	C++ support for crossarm-gcc
-Summary(pl.UTF-8):   Obsługa C++ dla crossarm-gcc
+Summary(pl.UTF-8):	Obsługa C++ dla crossarm-gcc
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
