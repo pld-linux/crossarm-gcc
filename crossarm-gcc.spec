@@ -4,7 +4,7 @@
 #		- Developing StrongARM shellocde - http://phrack.org/show.php?p=58&a=10
 #
 # Conditional build:
-%bcond_without	eabi		# build without Embedded ABI support
+%bcond_without	gnueabi		# build without Embedded ABI support
 #
 Summary:	Cross ARM GNU binary utility development utilities - gcc
 Summary(es.UTF-8):	Utilitarios para desarrollo de binarios de la GNU - ARM gcc
@@ -13,13 +13,13 @@ Summary(pl.UTF-8):	Skrośne narzędzia programistyczne GNU dla ARM - gcc
 Summary(pt_BR.UTF-8):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr.UTF-8):	GNU geliştirme araçları - ARM gcc
 Name:		crossarm-gcc
-Version:	4.0.2
-Release:	1%{?with_eabi:eabi}
+Version:	4.2.2
+Release:	1%{?with_gnueabi:gnueabi}
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
-# Source0-md5:	a659b8388cac9db2b13e056e574ceeb0
+# Source0-md5:	7ae33781417a35a2eb03ee098a9f4490
 %define		_llh_ver	2.6.12.0
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
 # Source1-md5:	eae2f562afe224ad50f65a6acfb4252c
@@ -32,15 +32,15 @@ URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	bison
-BuildRequires:	crossarm-binutils%{?with_eabi:(eabi)}
+BuildRequires:	crossarm-binutils%{?with_gnueabi:(gnueabi)}
 BuildRequires:	flex
 BuildRequires:	kernel-module-build
-Requires:	crossarm-binutils%{?with_eabi:(eabi)}
+Requires:	crossarm-binutils%{?with_gnueabi:(gnueabi)}
 Requires:	gcc-dirs
 ExcludeArch:	arm
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		target		arm-linux%{?with_eabi:-eabi}
+%define		target		arm-linux%{?with_gnueabi:-gnueabi}
 %define		arch		%{_prefix}/%{target}
 %define		gccarch		%{_libdir}/gcc/%{target}
 %define		gcclib		%{gccarch}/%{version}
@@ -90,8 +90,8 @@ rm -rf obj-%{target}
 install -d obj-%{target}
 cd obj-%{target}
 
-CFLAGS="%{rpmcflags}" \
-CXXFLAGS="%{rpmcxxflags}" \
+XCFLAGS="%{rpmcflags}" \
+XCXXFLAGS="%{rpmcxxflags}" \
 TEXCONFIG=false \
 ../configure \
 	--prefix=%{_prefix} \
@@ -160,26 +160,26 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/%{target}-cpp
 %attr(755,root,root) %{_bindir}/%{target}-gcc
+%attr(755,root,root) %{_bindir}/%{target}-gcc-%{version}
+%attr(755,root,root) %{_bindir}/%{target}-gcov
 %dir %{gccarch}
 %dir %{gcclib}
-%{?with_eabi:%dir %{gcclib}/thumb}
 %attr(755,root,root) %{gcclib}/cc1
 %attr(755,root,root) %{gcclib}/collect2
 %{gcclib}/*crt*.o
 %{gcclib}/libgcc.a
-%if %{with eabi}
-%{gcclib}/thumb/crt*.o
-%{gcclib}/thumb/libgcc.a
-%endif
+%{gcclib}/libgcov.a
 %{gcclib}/specs*
 %dir %{gcclib}/include
 %{gcclib}/include/*.h
 %{_mandir}/man1/%{target}-cpp.1*
 %{_mandir}/man1/%{target}-gcc.1*
+%{_mandir}/man1/%{target}-gcov.1*
 %{_examplesdir}/%{name}-%{version}
 
 %files c++
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/%{target}-c++
 %attr(755,root,root) %{_bindir}/%{target}-g++
 %attr(755,root,root) %{gcclib}/cc1plus
 %{_mandir}/man1/%{target}-g++.1*
