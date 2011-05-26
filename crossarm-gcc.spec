@@ -13,13 +13,13 @@ Summary(pl.UTF-8):	Skrośne narzędzia programistyczne GNU dla ARM - gcc
 Summary(pt_BR.UTF-8):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr.UTF-8):	GNU geliştirme araçları - ARM gcc
 Name:		crossarm-gcc
-Version:	4.2.2
+Version:	4.3.3
 Release:	1%{?with_gnueabi:gnueabi}
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
-# Source0-md5:	7ae33781417a35a2eb03ee098a9f4490
+# Source0-md5:	cc3c5565fdb9ab87a05ddb106ba0bd1f
 %define		_llh_ver	2.6.12.0
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
 # Source1-md5:	eae2f562afe224ad50f65a6acfb4252c
@@ -35,6 +35,7 @@ BuildRequires:	bison
 BuildRequires:	crossarm-binutils%{?with_gnueabi:(gnueabi)}
 BuildRequires:	flex
 BuildRequires:	kernel-module-build
+BuildRequires:	mpfr-devel
 Requires:	crossarm-binutils%{?with_gnueabi:(gnueabi)}
 Requires:	gcc-dirs
 ExcludeArch:	arm
@@ -137,12 +138,12 @@ gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir	$gccdir/tmp
 # we have to save these however
 #{?with_java:mv -f $gccdir/include/{gcj,libffi/ffitarget.h} $gccdir/tmp}
-mv -f	$gccdir/include/syslimits.h $gccdir/tmp
-rm -rf	$gccdir/include
-mv -f	$gccdir/tmp $gccdir/include
-cp -f	$gccdir/install-tools/include/*.h $gccdir/include
+#mv -f	$gccdir/include/syslimits.h $gccdir/tmp
+#rm -rf	$gccdir/include
+#mv -f	$gccdir/tmp $gccdir/include
+#cp -f	$gccdir/install-tools/include/*.h $gccdir/include
 # but we don't want anything more from install-tools
-rm -rf	$gccdir/install-tools
+#rm -rf	$gccdir/install-tools
 
 %if 0%{!?debug:1}
 %{target}-strip -g -R.note -R.comment $RPM_BUILD_ROOT%{gcclib}/libgcc.a
