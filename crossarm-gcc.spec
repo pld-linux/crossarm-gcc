@@ -13,13 +13,13 @@ Summary(pl.UTF-8):	Skrośne narzędzia programistyczne GNU dla ARM - gcc
 Summary(pt_BR.UTF-8):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr.UTF-8):	GNU geliştirme araçları - ARM gcc
 Name:		crossarm-gcc
-Version:	4.2.2
+Version:	10.2.0
 Release:	1%{?with_gnueabi:gnueabi}
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
-# Source0-md5:	7ae33781417a35a2eb03ee098a9f4490
+Source0:	https://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.xz
+# Source0-md5:	e9fd9b1789155ad09bcf3ae747596b50
 %define		_llh_ver	2.6.12.0
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
 # Source1-md5:	eae2f562afe224ad50f65a6acfb4252c
@@ -137,17 +137,12 @@ gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir	$gccdir/tmp
 # we have to save these however
 #{?with_java:mv -f $gccdir/include/{gcj,libffi/ffitarget.h} $gccdir/tmp}
-mv -f	$gccdir/include/syslimits.h $gccdir/tmp
+mv -f	$gccdir/include-fixed/syslimits.h $gccdir/tmp
 rm -rf	$gccdir/include
 mv -f	$gccdir/tmp $gccdir/include
 cp -f	$gccdir/install-tools/include/*.h $gccdir/include
 # but we don't want anything more from install-tools
 rm -rf	$gccdir/install-tools
-
-%if 0%{!?debug:1}
-%{target}-strip -g -R.note -R.comment $RPM_BUILD_ROOT%{gcclib}/libgcc.a
-%{target}-strip -g -R.note -R.comment $RPM_BUILD_ROOT%{gcclib}/libgcov.a
-%endif
 
 # custom startup file(s)
 install %{SOURCE4} $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
@@ -166,9 +161,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{gcclib}
 %attr(755,root,root) %{gcclib}/cc1
 %attr(755,root,root) %{gcclib}/collect2
+%attr(755,root,root) %{gcclib}/lto-wrapper
+%attr(755,root,root) %{gcclib}/lto1
+%attr(755,root,root) %{gcclib}/liblto_plugin.so*
 %{gcclib}/*crt*.o
-%{gcclib}/libgcc.a
-%{gcclib}/libgcov.a
 %{gcclib}/specs*
 %dir %{gcclib}/include
 %{gcclib}/include/*.h
