@@ -13,13 +13,13 @@ Summary(pl.UTF-8):	Skrośne narzędzia programistyczne GNU dla ARM - gcc
 Summary(pt_BR.UTF-8):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr.UTF-8):	GNU geliştirme araçları - ARM gcc
 Name:		crossarm-gcc
-Version:	10.2.0
+Version:	11.1.0
 Release:	1%{?with_gnueabi:gnueabi}
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
 Source0:	https://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.xz
-# Source0-md5:	e9fd9b1789155ad09bcf3ae747596b50
+# Source0-md5:	77f6252be0861ab918042acf42bc10ff
 %define		_llh_ver	2.6.12.0
 Source1:	http://ep09.pld-linux.org/~mmazur/linux-libc-headers/linux-libc-headers-%{_llh_ver}.tar.bz2
 # Source1-md5:	eae2f562afe224ad50f65a6acfb4252c
