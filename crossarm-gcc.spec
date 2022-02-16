@@ -11,7 +11,7 @@ Summary(pt_BR.UTF-8):	Utilitários para desenvolvimento de binários da GNU - AR
 Summary(tr.UTF-8):	GNU geliştirme araçları - ARM gcc
 Name:		crossarm-gcc
 Version:	11.2.0
-Release:	2
+Release:	3
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
