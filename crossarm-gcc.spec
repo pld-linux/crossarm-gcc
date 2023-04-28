@@ -10,13 +10,13 @@ Summary(pl.UTF-8):	Skrośne narzędzia programistyczne GNU dla ARM - gcc
 Summary(pt_BR.UTF-8):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr.UTF-8):	GNU geliştirme araçları - ARM gcc
 Name:		crossarm-gcc
-Version:	12.2.0
+Version:	13.1.0
 Release:	1
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
 Source0:	https://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.xz
-# Source0-md5:	73bafd0af874439dcdb9fc063b6fb069
+# Source0-md5:	43e4de77f2218c83ca675257ea1af9ef
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11.1
@@ -122,7 +122,6 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libiberty.a
 # include/ contains install-tools/include/* and headers that were fixed up
 # by fixincludes, we don't want former
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
-cp -p $gccdir/include-fixed/syslimits.h $gccdir/include
 cp -f	$gccdir/install-tools/include/*.h $gccdir/include
 # but we don't want anything more from install-tools
 rm -rf	$gccdir/install-tools
