@@ -10,13 +10,13 @@ Summary(pl.UTF-8):	Skrośne narzędzia programistyczne GNU dla ARM - gcc
 Summary(pt_BR.UTF-8):	Utilitários para desenvolvimento de binários da GNU - ARM gcc
 Summary(tr.UTF-8):	GNU geliştirme araçları - ARM gcc
 Name:		crossarm-gcc
-Version:	13.1.0
+Version:	13.2.0
 Release:	1
 Epoch:		1
 License:	GPL
 Group:		Development/Languages
 Source0:	https://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.xz
-# Source0-md5:	43e4de77f2218c83ca675257ea1af9ef
+# Source0-md5:	e0e48554cc6e4f261d55ddee9ab69075
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11.1
