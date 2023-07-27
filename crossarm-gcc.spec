@@ -26,6 +26,7 @@ BuildRequires:	flex >= 2.5.4
 BuildRequires:	gmp-devel >= 4.3.2
 BuildRequires:	isl-devel >= 0.15
 BuildRequires:	libmpc-devel >= 0.8.1
+BuildRequires:	libstdc++-devel
 BuildRequires:	mpfr-devel >= 3.1.0
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
